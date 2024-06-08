@@ -110,15 +110,18 @@ public:
         }
     }
 
+    MatrixInheritance(const Vector<Vector<T>>& other) : Vector<Vector<T>>(other) {}
+
+    operator Vector<Vector<T>>() const {
+        return *(Vector<Vector<T>>*)this;
+    }
+
     MatrixInheritance operator+(const MatrixInheritance& other) const {
         if (this->getSize() != other.getSize() || (*this)[0].getSize() != other[0].getSize()) {
             throw runtime_error("Wrong size");
         }
-        MatrixInheritance result(other);
 
-        *(Vector<Vector<T>>*)& result += *(Vector<Vector<T>>*)this;
-
-        return result;
+        return MatrixInheritance(static_cast<Vector<Vector<T>>>(*this) + static_cast<Vector<Vector<T>>>(other));
     }
 };
 
@@ -153,6 +156,7 @@ int main() {
         }
         cout << endl;
     }
+
 
     MatrixInheritance<double> m3 = m2 + m2;
     cout << "MatrixInheritance m3 = m2 + m2:" << endl;
