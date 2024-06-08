@@ -40,6 +40,26 @@ public:
         return *this;
     }
 
+    Vector operator+(const Vector& other) const {
+        if (size != other.size) {
+            throw runtime_error("Wrong size");
+        }
+        Vector result(size);
+        for (int i = 0; i < size; ++i) {
+            result[i] = a[i] + other.a[i];
+        }
+        return result;
+    }
+
+    Vector& operator+=(const Vector& other) {
+        if (size != other.size) {
+            throw runtime_error("Wrong size");
+        }
+        for (int i = 0; i < size; ++i) {
+            a[i] += other.a[i];
+        }
+        return *this;
+    }
 
     T& operator[](int i) {
         return a[i];
@@ -52,7 +72,6 @@ public:
     int getSize() const {
         return size;
     }
-
 };
 
 // матрица через агрегирование
@@ -82,7 +101,6 @@ public:
     const Vector<T>& operator[](int i) const {
         return data[i];
     }
-
 };
 
 // матрица через наследование
@@ -94,10 +112,21 @@ public:
             (*this)[i] = Vector<T>(c);
         }
     }
+
+    MatrixInheritance operator+(const MatrixInheritance& other) const {
+        if (this->getSize() != other.getSize() || (*this)[0].getSize() != other[0].getSize()) {
+            throw runtime_error("Matrices must have the same dimensions for addition.");
+        }
+
+        MatrixInheritance result(*this);
+        for (int i = 0; i < this->getSize(); ++i) {
+            result[i] += other[i];
+        }
+        return result;
+    }
 };
 
 int main() {
-    // тестирование MatrixAggregation
     MatrixAggregation<int> m1(3, 4);
     for (int i = 0; i < 3; ++i) {
         for (int j = 0; j < 4; ++j) {
@@ -113,7 +142,6 @@ int main() {
     }
 
 
-    // тестирование MatrixInheritance
     MatrixInheritance<double> m2(2, 3);
     m2[0][0] = 1.0;
     m2[0][1] = 2.0;
@@ -125,6 +153,15 @@ int main() {
     for (int i = 0; i < 2; ++i) {
         for (int j = 0; j < 3; ++j) {
             cout << m2[i][j] << " ";
+        }
+        cout << endl;
+    }
+
+    MatrixInheritance<double> m3 = m2 + m2;
+    cout << "MatrixInheritance m3 = m2 + m2:" << endl;
+    for (int i = 0; i < 2; ++i) {
+        for (int j = 0; j < 3; ++j) {
+            cout << m3[i][j] << " ";
         }
         cout << endl;
     }
