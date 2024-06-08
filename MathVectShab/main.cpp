@@ -1,7 +1,4 @@
 #include <iostream>
-#include <cmath>
-#include <string>
-#include <typeinfo>
 using namespace std;
 
 template <typename T>
@@ -115,16 +112,16 @@ public:
 
     MatrixInheritance operator+(const MatrixInheritance& other) const {
         if (this->getSize() != other.getSize() || (*this)[0].getSize() != other[0].getSize()) {
-            throw runtime_error("Matrices must have the same dimensions for addition.");
+            throw runtime_error("Wrong size");
         }
+        MatrixInheritance result(other);
 
-        MatrixInheritance result(*this);
-        for (int i = 0; i < this->getSize(); ++i) {
-            result[i] += other[i];
-        }
+        *(Vector<Vector<T>>*)& result += *(Vector<Vector<T>>*)this;
+
         return result;
     }
 };
+
 
 int main() {
     MatrixAggregation<int> m1(3, 4);
